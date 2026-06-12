@@ -1,0 +1,16 @@
+---
+- hosts: servers
+  become: true
+  tasks:
+
+  - name: Stop old container
+    shell: docker rm -f myapp || true
+
+  - name: Remove old image (optional)
+    shell: docker rmi your-dockerhub/app:latest || true
+
+  - name: Build new image locally
+    shell: docker build -t your-dockerhub/app:latest /var/lib/jenkins/workspace/your-job-name
+
+  - name: Run container
+    shell: docker run -d -p 80:80 --name myapp your-dockerhub/app:latest
